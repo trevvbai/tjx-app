@@ -18,14 +18,13 @@ builder.Services.AddCors(options =>
 		});
 });
 
-
 var dbPath = builder.Configuration.GetValue<string>("LiteDbOptions:DatabaseLocation");
-builder.Services.AddSingleton(new LiteDbContext(dbPath));
-
+builder.Services.AddSingleton<ILiteDbContext>(new LiteDbContext(dbPath));
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 var app = builder.Build();
 
-var dbContext = app.Services.GetService<LiteDbContext>();
+var dbContext = app.Services.GetService<ILiteDbContext>();
 var dbInitializer = new DatabaseInitializer(dbContext);
 dbInitializer.InitDb();
 

@@ -1,16 +1,10 @@
 using tjx_api.Entities;
+using tjx_api.Enums;
 
 namespace tjx_api;
 
-public class DatabaseInitializer
+public class DatabaseInitializer(ILiteDbContext context)
 {
-	private readonly LiteDbContext _context;
-
-	public DatabaseInitializer(LiteDbContext context)
-	{
-		_context = context;
-	}
-	
 	public void InitDb()
 	{
 		PopulateInitialProducts();
@@ -20,17 +14,17 @@ public class DatabaseInitializer
 
 	private void PopulateInitialCurrencies()
 	{
-		var currencyCollection = _context.Database.GetCollection<Currency>("Currency");
+		var currencyCollection = context.Database.GetCollection<Currency>("Currency");
 
 		// Check if the collection already has data to avoid duplicating initial data
 		if (currencyCollection.Count() == 0)
 		{
 			var initialCurrencies = new List<Currency>
 			{
-				new() { _id = 1, CurrencyCode = "GBP", ExchangeRate = 1, ValidFromDate = new DateOnly(2024,1,1)},
-				new() { _id = 2, CurrencyCode = "USD", ExchangeRate = 1.25919m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,12,25)},
-				new() { _id = 3, CurrencyCode = "CAD", ExchangeRate = 1.69873m, ValidFromDate = new DateOnly(2024,1,1)},
-				new() { _id = 4, CurrencyCode = "MXN", ExchangeRate = 21.460247m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,1,30)},
+				new() { _id = 1, CurrencyCode = CurrencyCodes.GBP.ToString(), ExchangeRate = 1, ValidFromDate = new DateOnly(2024,1,1)},
+				new() { _id = 2, CurrencyCode = CurrencyCodes.USD.ToString(), ExchangeRate = 1.25919m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,12,25)},
+				new() { _id = 3, CurrencyCode = CurrencyCodes.CAD.ToString(), ExchangeRate = 1.69873m, ValidFromDate = new DateOnly(2024,1,1)},
+				new() { _id = 4, CurrencyCode = CurrencyCodes.MXD.ToString(), ExchangeRate = 21.460247m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,1,30)},
 			};
 
 			currencyCollection.InsertBulk(initialCurrencies);
@@ -38,7 +32,7 @@ public class DatabaseInitializer
 
 	private void PopulateInitialProducts()
 	{
-		var productsCollection = _context.Database.GetCollection<Product>("Product");
+		var productsCollection = context.Database.GetCollection<Product>("Product");
 
 		// Check if the collection already has data to avoid duplicating initial data
 		if (productsCollection.Count() == 0)
@@ -58,7 +52,7 @@ public class DatabaseInitializer
 	
 	private void PopulateInitialCountries()
 	{
-		var countryCollection = _context.Database.GetCollection<Country>("Country");
+		var countryCollection = context.Database.GetCollection<Country>("Country");
 
 		// Check if the collection already has data to avoid duplicating initial data
 		if (countryCollection.Count() == 0)

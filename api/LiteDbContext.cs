@@ -1,14 +1,9 @@
 using LiteDB;
-using tjx_api.Controllers;
+using tjx_api.Entities;
 
 namespace tjx_api;
 
-public class LiteDbContext
+public class LiteDbContext(string path) : ILiteDbContext
 {
-	public LiteDatabase Database { get; }
-
-	public LiteDbContext(string path)
-	{
-		Database = new LiteDatabase(path);
-	}
+	public LiteDatabase Database { get; } = new(path);
 }

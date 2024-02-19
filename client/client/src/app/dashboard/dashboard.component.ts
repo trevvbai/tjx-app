@@ -94,8 +94,6 @@ export class DashboardComponent implements OnInit {
 	}
 
 	convertAndFilterCurrencies(){
-
-
 		for (const product of this.products) {
 			const selectedCurrency = this.allCurrencies.find(x => x.currencyCode == this.selectedCountry.currencyCode);
 			if (selectedCurrency) {
