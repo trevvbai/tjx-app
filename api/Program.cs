@@ -9,11 +9,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowAll",
-		builder => builder.AllowAnyOrigin()
-			.AllowAnyHeader()
-			.AllowAnyMethod()
-	);
+	options.AddPolicy("AllowSpecificOrigin",
+		policy =>
+		{
+			policy.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod();
+		});
 });
 
 
@@ -22,6 +24,10 @@ builder.Services.AddSingleton(new LiteDbContext(dbPath));
 
 
 var app = builder.Build();
+
+var dbContext = app.Services.GetService<LiteDbContext>();
+var dbInitializer = new DatabaseInitializer(dbContext);
+dbInitializer.InitDb();
 
 if (app.Environment.IsDevelopment())
 {
@@ -35,7 +41,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigin");
 app.MapControllers();
 
 app.Run();

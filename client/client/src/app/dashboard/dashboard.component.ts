@@ -3,6 +3,7 @@ import {DashboardService} from "../services/dashboard/dashboard.service";
 import {Product} from "../models/product";
 import {MessageService} from "primeng/api";
 import {messageTypes} from "../enums/messageTypes";
+import {Country} from "../models/country";
 
 @Component({
   selector: 'app-dashboard',
@@ -11,6 +12,8 @@ import {messageTypes} from "../enums/messageTypes";
 })
 export class DashboardComponent implements OnInit{
 	products: Product[] = [];
+	allCountries : Country[] = [];
+	selectedCountry: Country;
 
 	constructor(
 		private dashboardService: DashboardService,
@@ -20,6 +23,7 @@ export class DashboardComponent implements OnInit{
 
 	ngOnInit() {
 		this.getProducts();
+		this.getCountries();
 	}
 
 	getProducts():void{
@@ -29,14 +33,31 @@ export class DashboardComponent implements OnInit{
 					this.products = res.body;
 				}
 			},
-			error: (e) => {
-				this.showError(e);
+			error: (e: Error) => {
+				this.showError(e.message);
+			}
+		})
+	}
+
+	private getCountries() {
+		this.dashboardService.getDashboardCountries().subscribe({
+			next: (res) => {
+				if (res.body) {
+					this.allCountries = res.body;
+					this.selectedCountry = this.allCountries[0]
+				}
+			},
+			error: (e: Error) => {
+				this.showError(e.message);
 			}
 		})
 	}
 
 	private showError(e: any) {
 		this.messageService.add({severity: messageTypes.Error, summary: 'Error', detail: 'Error Loading Product Data'})
+	}
 
+	handleDropdownChange($event: Country) {
+		this.selectedCountry = $event;
 	}
 }

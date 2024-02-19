@@ -7,6 +7,10 @@ import {CommonModule} from "@angular/common";
 import {TableModule} from "primeng/table";
 import {Accordion, AccordionModule} from "primeng/accordion";
 import {CardModule} from "primeng/card";
+import {MultiSelectModule} from "primeng/multiselect";
+import {FormsModule} from "@angular/forms";
+import {SelectButtonModule} from "primeng/selectbutton";
+import {DropdownModule} from "primeng/dropdown";
 
 @NgModule({
 	declarations: [
@@ -19,7 +23,11 @@ import {CardModule} from "primeng/card";
 		ToastModule,
 		TableModule,
 		AccordionModule,
-		CardModule
+		CardModule,
+		MultiSelectModule,
+		FormsModule,
+		SelectButtonModule,
+		DropdownModule
 	],
 	providers: [
 		// Register application-wide services here.

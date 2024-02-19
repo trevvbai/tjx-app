@@ -1,7 +1,17 @@
 <div class="w-95 m-auto">
 	<h1 class="mt-5">Product Dashboard</h1>
 
-	<div class="mt-5">
+
+	<div class="w-95 mt-5">
+		<p-dropdown
+			[options]="allCountries"
+			[optionLabel]="'name'"
+			[placeholder]="'Select Currency'"
+			[ngModel]="selectedCountry"
+			(onChange)="handleDropdownChange($event.value)"
+		></p-dropdown>
+	</div>
+	<div class="mt-2">
 		<p-card>
 			<p-table
 				[value]="products"
@@ -15,9 +25,9 @@
 				</ng-template>
 				<ng-template pTemplate="body" let-product>
 					<tr>
-						<td>{{product.name}}</td>
+						<td>{{product.name}}</td >
 						<td>{{product.description}}</td>
-						<td>{{product.price}}</td>
+						<td>{{product.price}} {{ selectedCountry.currencyCode }}</td>
 					</tr>
 				</ng-template>
 
