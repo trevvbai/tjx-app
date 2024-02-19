@@ -1,5 +1,3 @@
-
-using tjx_api.Controllers;
 using tjx_api.Entities;
 
 namespace tjx_api;
@@ -32,6 +30,7 @@ public class DatabaseInitializer
 				new() { _id = 1, CurrencyCode = "GBP", ExchangeRate = 1, ValidFromDate = new DateOnly(2024,1,1)},
 				new() { _id = 2, CurrencyCode = "USD", ExchangeRate = 1.25919m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,12,25)},
 				new() { _id = 3, CurrencyCode = "CAD", ExchangeRate = 1.69873m, ValidFromDate = new DateOnly(2024,1,1)},
+				new() { _id = 4, CurrencyCode = "MXN", ExchangeRate = 21.460247m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,1,30)},
 			};
 
 			currencyCollection.InsertBulk(initialCurrencies);
@@ -69,6 +68,7 @@ public class DatabaseInitializer
 				new() { _id = 1, Name = "United Kingdom", CountryCode = "UK", CurrencyCode = "GBP"},
 				new() { _id = 2, Name = "United States", CountryCode = "USA", CurrencyCode = "USD"},
 				new() { _id = 3, Name = "Canada", CountryCode = "CA", CurrencyCode = "CAD"},
+				new() { _id = 4, Name = "Mexico", CountryCode = "MX", CurrencyCode = "MXN"},
 			};
 
 			countryCollection.InsertBulk(initialCountries);

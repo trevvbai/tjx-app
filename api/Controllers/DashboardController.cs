@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using Microsoft.AspNetCore.Mvc;
 using tjx_api.DTOs;
 using tjx_api.Entities;
@@ -38,17 +39,21 @@ public class DashboardController: ControllerBase
 	[HttpGet("countries")]
 	public IActionResult GetAllCountries()
 	{
-		var collection = _db.Database.GetCollection<Country>("Country");
-		var countries = collection.FindAll();
-
-		var countryDTOs = countries.Select(x =>
-			new CountryDTO()
-			{
-				Name = x.Name,
-				CountryCode = x.CountryCode,
-				CurrencyCode = x.CurrencyCode
-			}
-		);
+		var countrySelection = _db.Database.GetCollection<Country>("Country");
+		var currencyCollection = _db.Database.GetCollection<Currency>("Currency");
+		var currencies = currencyCollection.FindAll().ToList();
+		var today = DateOnly.FromDateTime(DateTime.Now);
+		
+		var countryDTOs = countrySelection.FindAll()
+			.Where(country => currencies.Any(currency => currency.CurrencyCode == country.CurrencyCode && (currency.ValidToDate >= today || currency.ValidToDate == null)))
+			.Select(country =>
+				new CountryDTO()
+				{
+					Name = country.Name,
+					CountryCode = country.CountryCode,
+					CurrencyCode = country.CurrencyCode,
+				})
+			.ToList();
 
 		return Ok(countryDTOs);
 	}
@@ -64,8 +69,6 @@ public class DashboardController: ControllerBase
 			{
 				CurrencyCode = x.CurrencyCode,
 				ExchangeRate = x.ExchangeRate,
-				ValidFromDate = x.ValidFromDate,
-				ValidToDate = x.ValidToDate
 			}
 		);
 

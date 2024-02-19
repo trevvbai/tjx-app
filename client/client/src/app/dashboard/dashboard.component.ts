@@ -27,7 +27,7 @@ export class DashboardComponent implements OnInit {
 		combineLatest([this.productsLoaded, this.currenciesLoaded]).pipe(
 			filter(([val1, val2]) => val1 && val2)
 		).subscribe(() => {
-				this.convertPrices();
+				this.convertAndFilterCurrencies();
 			}
 		)
 	}
@@ -90,16 +90,18 @@ export class DashboardComponent implements OnInit {
 
 	handleDropdownChange($event: Country) {
 		this.selectedCountry = $event;
-		this.convertPrices();
+		this.convertAndFilterCurrencies();
 	}
 
-	convertPrices(){
+	convertAndFilterCurrencies(){
+
+
 		for (const product of this.products) {
-			const exchangeRate = this.allCurrencies.find(x => x.currencyCode == this.selectedCountry.currencyCode)?.exchangeRate;
-			if (exchangeRate) {
+			const selectedCurrency = this.allCurrencies.find(x => x.currencyCode == this.selectedCountry.currencyCode);
+			if (selectedCurrency) {
 				const originalPrice = this.products.find(x => x.id == product.id)?.price;
 				if (originalPrice) {
-					product.displayPrice = originalPrice * exchangeRate
+					product.displayPrice = originalPrice * selectedCurrency.exchangeRate
 				}
 			}
 		}
