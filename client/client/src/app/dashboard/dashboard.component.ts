@@ -4,33 +4,49 @@ import {Product} from "../models/product";
 import {MessageService} from "primeng/api";
 import {messageTypes} from "../enums/messageTypes";
 import {Country} from "../models/country";
+import {Currency} from "../models/currency";
+import {combineLatest, filter, Subject} from "rxjs";
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss',
+	selector: 'app-dashboard',
+	templateUrl: './dashboard.component.html',
+	styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit{
+export class DashboardComponent implements OnInit {
 	products: Product[] = [];
-	allCountries : Country[] = [];
+	allCountries: Country[] = [];
 	selectedCountry: Country;
+	allCurrencies: Currency[];
+	productsLoaded = new Subject<boolean>();
+	currenciesLoaded = new Subject<boolean>();
 
 	constructor(
 		private dashboardService: DashboardService,
 		private messageService: MessageService,
 	) {
+		combineLatest([this.productsLoaded, this.currenciesLoaded]).pipe(
+			filter(([val1, val2]) => val1 && val2)
+		).subscribe(() => {
+				this.convertPrices();
+			}
+		)
 	}
 
 	ngOnInit() {
+		this.productsLoaded.next(false);
+		this.currenciesLoaded.next(false);
+
 		this.getProducts();
 		this.getCountries();
+		this.getCurrencies();
 	}
 
-	getProducts():void{
-		this.dashboardService.getDashboardProducts().subscribe({
+	getProducts(): void {
+		this.dashboardService.getProducts().subscribe({
 			next: (res) => {
 				if (res.body) {
 					this.products = res.body;
+					this.productsLoaded.next(true);
 				}
 			},
 			error: (e: Error) => {
@@ -40,11 +56,26 @@ export class DashboardComponent implements OnInit{
 	}
 
 	private getCountries() {
-		this.dashboardService.getDashboardCountries().subscribe({
+		this.dashboardService.getCountries().subscribe({
 			next: (res) => {
 				if (res.body) {
 					this.allCountries = res.body;
-					this.selectedCountry = this.allCountries[0]
+					const uk = this.allCountries.find(x => x.countryCode == 'UK')
+					this.selectedCountry = uk ? uk : this.allCountries[0];
+				}
+			},
+			error: (e: Error) => {
+				this.showError(e.message);
+			}
+		})
+	}
+
+	private getCurrencies() {
+		this.dashboardService.getCurrencies().subscribe({
+			next: (res) => {
+				if (res.body) {
+					this.allCurrencies = res.body;
+					this.currenciesLoaded.next(true);
 				}
 			},
 			error: (e: Error) => {
@@ -59,5 +90,18 @@ export class DashboardComponent implements OnInit{
 
 	handleDropdownChange($event: Country) {
 		this.selectedCountry = $event;
+		this.convertPrices();
+	}
+
+	convertPrices(){
+		for (const product of this.products) {
+			const exchangeRate = this.allCurrencies.find(x => x.currencyCode == this.selectedCountry.currencyCode)?.exchangeRate;
+			if (exchangeRate) {
+				const originalPrice = this.products.find(x => x.id == product.id)?.price;
+				if (originalPrice) {
+					product.displayPrice = originalPrice * exchangeRate
+				}
+			}
+		}
 	}
 }

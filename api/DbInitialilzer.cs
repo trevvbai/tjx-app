@@ -16,8 +16,26 @@ public class DatabaseInitializer
 	public void InitDb()
 	{
 		PopulateInitialProducts();
+		PopulateInitialCountries();
 		PopulateInitialCurrencies();
 	}
+
+	private void PopulateInitialCurrencies()
+	{
+		var currencyCollection = _context.Database.GetCollection<Currency>("Currency");
+
+		// Check if the collection already has data to avoid duplicating initial data
+		if (currencyCollection.Count() == 0)
+		{
+			var initialCurrencies = new List<Currency>
+			{
+				new() { _id = 1, CurrencyCode = "GBP", ExchangeRate = 1, ValidFromDate = new DateOnly(2024,1,1)},
+				new() { _id = 2, CurrencyCode = "USD", ExchangeRate = 1.25919m, ValidFromDate = new DateOnly(2024,1,1), ValidToDate = new DateOnly(2024,12,25)},
+				new() { _id = 3, CurrencyCode = "CAD", ExchangeRate = 1.69873m, ValidFromDate = new DateOnly(2024,1,1)},
+			};
+
+			currencyCollection.InsertBulk(initialCurrencies);
+		}	}
 
 	private void PopulateInitialProducts()
 	{
@@ -28,18 +46,18 @@ public class DatabaseInitializer
 		{
 			var initialProducts = new List<Product>
 			{
-				new() { Id = 1, Name = "T-shirt", Description = "Mens t-shirt, size medium", PriceInPennies = 1999 },
-				new() { Id = 2, Name = "Jeans", Description = "Womens jeans, size small", PriceInPennies = 4599 },
-				new() { Id = 3, Name = "Hat", Description = "Summer hat, one size", PriceInPennies = 1099 },
-				new() { Id = 4, Name = "Coat", Description = "Unisex winter jacket, size large", PriceInPennies = 8099 },
-				new() { Id = 5, Name = "Trainers", Description = "Womens fashion footwear, size 37", PriceInPennies = 5599 },
+				new() { _id = 1, Name = "T-shirt", Description = "Mens t-shirt, size medium", PriceInPennies = 1999 },
+				new() { _id = 2, Name = "Jeans", Description = "Womens jeans, size small", PriceInPennies = 4599 },
+				new() { _id = 3, Name = "Hat", Description = "Summer hat, one size", PriceInPennies = 1099 },
+				new() { _id = 4, Name = "Coat", Description = "Unisex winter jacket, size large", PriceInPennies = 8099 },
+				new() { _id = 5, Name = "Trainers", Description = "Womens fashion footwear, size 37", PriceInPennies = 5599 },
 			};
 
 			productsCollection.InsertBulk(initialProducts);
 		}
 	}
 	
-	private void PopulateInitialCurrencies()
+	private void PopulateInitialCountries()
 	{
 		var countryCollection = _context.Database.GetCollection<Country>("Country");
 
@@ -48,12 +66,13 @@ public class DatabaseInitializer
 		{
 			var initialCountries = new List<Country>
 			{
-				new() { Id = 1, Name = "United Kingdom", CountryCode = "UK", CurrencyCode = "GBP"},
-				new() { Id = 2, Name = "United States", CountryCode = "USA", CurrencyCode = "USD"},
-				new() { Id = 3, Name = "Canada", CountryCode = "CA", CurrencyCode = "CAD"},
+				new() { _id = 1, Name = "United Kingdom", CountryCode = "UK", CurrencyCode = "GBP"},
+				new() { _id = 2, Name = "United States", CountryCode = "USA", CurrencyCode = "USD"},
+				new() { _id = 3, Name = "Canada", CountryCode = "CA", CurrencyCode = "CAD"},
 			};
 
 			countryCollection.InsertBulk(initialCountries);
 		}
 	}
+	
 }

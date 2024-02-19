@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using tjx_api.DTOs;
 using tjx_api.Entities;
@@ -25,6 +24,7 @@ public class DashboardController: ControllerBase
 		var productDTOs = products.Select(x =>
 			new ProductDTO()
 			{
+				Id = x._id,
 				Name = x.Name,
 				Description = x.Description,
 				PriceInPennies = x.PriceInPennies
@@ -36,7 +36,7 @@ public class DashboardController: ControllerBase
 	}
 
 	[HttpGet("countries")]
-	public IActionResult GetAllCurrencies()
+	public IActionResult GetAllCountries()
 	{
 		var collection = _db.Database.GetCollection<Country>("Country");
 		var countries = collection.FindAll();
@@ -53,4 +53,22 @@ public class DashboardController: ControllerBase
 		return Ok(countryDTOs);
 	}
 	
+	[HttpGet("currencies")]
+	public IActionResult GetAllCurrencies()
+	{
+		var collection = _db.Database.GetCollection<Currency>("Currency");
+		var currencies = collection.FindAll();
+
+		var currencyDTOs = currencies.Select(x =>
+			new CurrencyDTO()
+			{
+				CurrencyCode = x.CurrencyCode,
+				ExchangeRate = x.ExchangeRate,
+				ValidFromDate = x.ValidFromDate,
+				ValidToDate = x.ValidToDate
+			}
+		);
+
+		return Ok(currencyDTOs);
+	}
 }

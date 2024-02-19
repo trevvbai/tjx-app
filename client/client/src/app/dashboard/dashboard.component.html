@@ -27,7 +27,7 @@
 					<tr>
 						<td>{{product.name}}</td >
 						<td>{{product.description}}</td>
-						<td>{{product.price}} {{ selectedCountry.currencyCode }}</td>
+						<td>{{product.displayPrice | number:'1.2-2'}} {{ selectedCountry.currencyCode }}</td>
 					</tr>
 				</ng-template>
 

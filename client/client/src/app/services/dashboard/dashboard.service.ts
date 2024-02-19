@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {Product} from "../../models/product";
 import {Country} from "../../models/country";
+import {Currency} from "../../models/currency";
 
 @Injectable({
 	providedIn:"root"
@@ -16,18 +17,24 @@ export class DashboardService {
 	){
 	}
 
-	public getDashboardProducts() : Observable<HttpResponse<Product[]>>{
+	public getProducts() : Observable<HttpResponse<Product[]>>{
 		return this.http.get<Product[]>(
 			`${this.dashboardRootUrl}/products`,
 			{observe: 'response', headers: this.httpHeaders, responseType: 'json'}
 		);
 	}
 
-	public getDashboardCountries() : Observable<HttpResponse<Country[]>>{
+	public getCountries() : Observable<HttpResponse<Country[]>>{
 		return this.http.get<Country[]>(
 			`${this.dashboardRootUrl}/countries`,
 			{observe: 'response', headers: this.httpHeaders, responseType: 'json'}
 		);
 	}
 
+	public getCurrencies() : Observable<HttpResponse<Currency[]>>{
+		return this.http.get<Currency[]>(
+			`${this.dashboardRootUrl}/currencies`,
+			{observe: 'response', headers: this.httpHeaders, responseType: 'json'}
+		);
+	}
 }
