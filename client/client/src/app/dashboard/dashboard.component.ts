@@ -1,24 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-// import {DashboardService} from "../services/dashboard/dashboard-service";
-import {HttpClientModule} from "@angular/common/http";
 import {DashboardService} from "../services/dashboard/dashboard.service";
 import {Product} from "../models/product";
-import {NgForOf} from "@angular/common";
-import {ButtonModule} from "primeng/button";
+import {MessageService} from "primeng/api";
+import {messageTypes} from "../enums/messageTypes";
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
-	imports: [HttpClientModule, NgForOf, ButtonModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
-	providers: [DashboardService]
 })
 export class DashboardComponent implements OnInit{
 	products: Product[] = [];
 
 	constructor(
-		private dashboardService: DashboardService
+		private dashboardService: DashboardService,
+		private messageService: MessageService,
 	) {
 	}
 
@@ -34,7 +30,14 @@ export class DashboardComponent implements OnInit{
 				}
 			},
 			error: (e) => {
-				console.log(e)}
+				this.showError(e);
+				// this.toastComponent.showErrorToast(e);
+			}
 		})
+	}
+
+	private showError(e: any) {
+		this.messageService.add({severity: messageTypes.Error, summary: 'Error', detail: 'Error Loading Product Data'})
+
 	}
 }

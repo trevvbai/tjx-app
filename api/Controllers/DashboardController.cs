@@ -9,9 +9,9 @@ public class DashboardController: ControllerBase
 	[HttpGet("products")]
 	public IActionResult GetProducts()
 	{
-		var products = new List<Product>
+		var products = new List<ProductDto>
 		{
-			new Product
+			new ProductDto
 			{
 				Name = "T-Shirt",
 				Id = 1,
@@ -23,12 +23,4 @@ public class DashboardController: ControllerBase
 		return Ok(products);
 	}
 	
-}
-
-public class Product
-{
-	public string Name { get; set; }
-	public int Id { get; set; }
-	public string Description { get; set; }
-	public double Price { get; set; }
 }

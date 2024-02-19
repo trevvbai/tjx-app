@@ -6,15 +6,13 @@ import {Product} from "../../models/product";
 @Injectable({
 	providedIn:"root"
 })
-
 export class DashboardService {
 
 	dashboardRootUrl: string = "https://localhost:7219/api/dashboard"
-	httpHeaders: HttpHeaders = new HttpHeaders();
+	private readonly httpHeaders: HttpHeaders = new HttpHeaders();
 	constructor(
 		private http: HttpClient
 	){
-
 	}
 
 	public getDashboardProducts() : Observable<HttpResponse<Product[]>>{

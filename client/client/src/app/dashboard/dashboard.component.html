@@ -1,8 +1,32 @@
-<h1>Dashboard Component</h1>
+<div class="w-95 m-auto">
+	<h1 class="mt-5">Product Dashboard</h1>
 
-<p-button (onClick)="getProducts()">
-	Get Products
-</p-button>
-<div *ngFor="let product of products">
-	{{product.name}} {{product.description}} {{product.id}} {{product.price}}
+	<div class="mt-5">
+		<p-card>
+			<p-table
+				[value]="products"
+			>
+				<ng-template pTemplate="header">
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						<th>Price</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-product>
+					<tr>
+						<td>{{product.name}}</td>
+						<td>{{product.description}}</td>
+						<td>{{product.price}}</td>
+					</tr>
+				</ng-template>
+
+			</p-table>
+
+		</p-card>
+	</div>
+
+
 </div>
+
+
