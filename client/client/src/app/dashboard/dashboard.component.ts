@@ -31,7 +31,6 @@ export class DashboardComponent implements OnInit{
 			},
 			error: (e) => {
 				this.showError(e);
-				// this.toastComponent.showErrorToast(e);
 			}
 		})
 	}

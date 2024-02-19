@@ -1,6 +1,6 @@
 namespace tjx_api.Controllers;
 
-public class ProductDto
+public class Product
 {
 	public string Name { get; set; }
 	public int Id { get; set; }

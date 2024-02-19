@@ -1,3 +1,5 @@
+using tjx_api;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,6 +15,11 @@ builder.Services.AddCors(options =>
 			.AllowAnyMethod()
 	);
 });
+
+
+var dbPath = builder.Configuration.GetValue<string>("LiteDbOptions:DatabaseLocation");
+builder.Services.AddSingleton(new LiteDbContext(dbPath));
+
 
 var app = builder.Build();
 
